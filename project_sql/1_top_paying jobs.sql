@@ -1,7 +1,7 @@
 -- 01_top_paying_jobs.sql
 
 /*
-What are the top paying data analyst jobs? 
+Top paying data analyst jobs
 - Only Data Analyst roles
 - Location - Anywhere 
 - Remove null salaries
