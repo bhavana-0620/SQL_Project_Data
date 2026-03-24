@@ -14,7 +14,7 @@ The goal is to provide **data-driven guidance** for aspiring data analysts on wh
 
 ## 📂 Dataset
 
-🔗 [Download Dataset](your_drive_link_here)
+🔗 [Download Dataset](https://drive.google.com/drive/folders/1lUWa3KBU6z7cSb1P_hBM7zDzoKY8IstN?usp=drive_link)
 
 
 🔗 **SQL Queries:** [project_sql folder](./project_sql)
