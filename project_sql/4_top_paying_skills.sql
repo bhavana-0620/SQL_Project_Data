@@ -1,23 +1,41 @@
 /*
-Question: What are the top skills based on salary?
+-- 04_top_paying_skills.sql
+
+Top skills based on salary
 - Look at the average salary associated with each skill for Data Analyst positions
 - Focuses on roles with specified salaries, regardless of location
-- Why? It reveals how different skills impact salary levels for Data Analysts and
-  helps identify the most financially rewarding skills to acquire or improve
 */
+
+WITH filtered_jobs AS (
+    SELECT 
+        job_id,
+        salary_year_avg
+    FROM job_postings_fact
+    WHERE 
+        salary_year_avg IS NOT NULL
+        AND job_title LIKE '%Data Analyst%'
+        AND job_title NOT LIKE '%Director%'
+        AND job_title NOT LIKE '%Principal%'
+        AND job_title NOT LIKE '%Manager%'
+),
+
+skill_salary AS (
+    SELECT 
+        sd.skills,
+        COUNT(DISTINCT fj.job_id) AS job_count,
+        AVG(fj.salary_year_avg) AS avg_salary
+    FROM filtered_jobs fj
+    JOIN skills_job_dim sj 
+        ON fj.job_id = sj.job_id
+    JOIN skills_dim sd 
+        ON sj.skill_id = sd.skill_id
+    GROUP BY sd.skills
+)
 
 SELECT 
     skills,
-    round(avg(salary_year_avg), 0) as avg_salary
-FROM job_postings_fact
-INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
-INNER JOIN skills_dim on skills_job_dim.skill_id = skills_dim.skill_id
-WHERE 
-    job_title_short = 'Data Analyst' 
-    and salary_year_avg is NOT NULL
-    AND job_work_from_home = True
-GROUP BY
-    skills 
-ORDER BY 
-    avg_salary DESC
-LIMIT 25
+    ROUND(avg_salary, 0) AS avg_salary
+FROM skill_salary
+WHERE job_count >= 5   
+ORDER BY avg_salary DESC
+LIMIT 25;
